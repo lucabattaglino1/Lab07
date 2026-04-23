@@ -24,4 +24,27 @@ class MeteoDao():
             cnx.close()
         return result
 
+    @staticmethod
+    def getUmidita():
+        cnx = DBConnect.get_connection()  # connessione
+        cursor = cnx.cursor(dictionary=True)  # creo cursore
+
+        # query scritta su DBVEAR
+        query = """SELECT Localita, AVG(umidita) as media
+                    FROM situazione
+                    WHERE MONTH(Data) = %s
+                    ORDER BY Localita"""
+
+        cursor.execute(query)  # eseguo la query
+
+        # ciclo su cursore per leggere i dati
+        # li inserisco in una lista
+        res = []
+        for row in cursor:
+            res.append(row)
+
+        cursor.close()  # chiudo cursore
+        cnx.close()  # restituisco connessione
+        return res  # return della lista
+
 
